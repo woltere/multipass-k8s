@@ -23,6 +23,11 @@ Usage:
   make apparmor
   make cks-tools
   make cks-clean
+  make cks-reports
+  make falco-report
+  make trivy-reports
+  make kube-bench-report
+  make cks-reports-save
 
 Direct script usage:
   ./scripts/cluster.sh <create|start|stop|destroy|status|diagnose|kubeconfig|check-tools>

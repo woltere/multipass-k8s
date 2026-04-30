@@ -58,6 +58,8 @@ load_addons_config() {
   TRIVY_HELM_EXTRA_ARGS="${TRIVY_HELM_EXTRA_ARGS:-}"
   KUBE_BENCH_NAMESPACE="${KUBE_BENCH_NAMESPACE:-security-tools}"
   KUBE_BENCH_IMAGE="${KUBE_BENCH_IMAGE:-aquasec/kube-bench:latest}"
+  REPORTS_DIR="${REPORTS_DIR:-reports}"
+  FALCO_LOG_LINES="${FALCO_LOG_LINES:-200}"
 }
 
 log() {

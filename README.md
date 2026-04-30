@@ -54,6 +54,11 @@ make cilium       # install Cilium
 make apparmor     # load AppArmor profile on every node and apply a demo pod
 make cks-tools    # install Falco, Trivy Operator, and a kube-bench job
 make cks-clean    # remove the CKS add-ons installed by this project
+make cks-reports  # show Falco, Trivy, and kube-bench report output
+make falco-report # show Falco pods and recent logs
+make trivy-reports # list Trivy Operator report resources
+make kube-bench-report # show kube-bench job status and logs
+make cks-reports-save # save CKS reports under reports/<timestamp>/
 ```
 
 ## Configuration
@@ -80,6 +85,30 @@ The `cks-tools` target installs practical tools commonly used while studying the
 - kube-bench as a Kubernetes CIS benchmark job
 
 These are intentionally add-ons, not part of cluster bootstrap, so the base cluster remains close to a raw kubeadm lab.
+
+## CKS Reports
+
+Show all CKS report summaries:
+
+```sh
+make cks-reports
+```
+
+Show one report source:
+
+```sh
+make falco-report
+make trivy-reports
+make kube-bench-report
+```
+
+Save all report output to `reports/<timestamp>/`:
+
+```sh
+make cks-reports-save
+```
+
+Trivy Operator reports may take a few minutes to appear after workloads are created.
 
 ## AppArmor
 

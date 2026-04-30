@@ -35,8 +35,10 @@ export TRIVY_VALUES_FILE
 export TRIVY_HELM_EXTRA_ARGS
 export KUBE_BENCH_NAMESPACE
 export KUBE_BENCH_IMAGE
+export REPORTS_DIR
+export FALCO_LOG_LINES
 
-.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean check-tools verify
+.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean cks-reports falco-report trivy-reports kube-bench-report cks-reports-save check-tools verify
 
 help:
 	@./scripts/cluster.sh help
@@ -73,6 +75,21 @@ cks-tools:
 
 cks-clean:
 	@./scripts/addons.sh cks-clean
+
+cks-reports:
+	@./scripts/reports.sh all
+
+falco-report:
+	@./scripts/reports.sh falco
+
+trivy-reports:
+	@./scripts/reports.sh trivy
+
+kube-bench-report:
+	@./scripts/reports.sh kube-bench
+
+cks-reports-save:
+	@./scripts/reports.sh save
 
 check-tools:
 	@./scripts/cluster.sh check-tools
