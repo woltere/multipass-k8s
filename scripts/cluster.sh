@@ -358,9 +358,11 @@ diagnose_cluster() {
   mp_exec "$first_cp" sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a --name 'kube-apiserver|etcd|kube-controller-manager|kube-scheduler' || true
 
   log "recent etcd container logs"
+  # shellcheck disable=SC2016
   mp_exec "$first_cp" sudo bash -lc 'id="$(crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a --name etcd -q | head -n 1)"; if [[ -n "$id" ]]; then crictl --runtime-endpoint unix:///run/containerd/containerd.sock logs --tail=120 "$id"; else echo "no etcd container found"; fi' || true
 
   log "recent apiserver container logs"
+  # shellcheck disable=SC2016
   mp_exec "$first_cp" sudo bash -lc 'id="$(crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a --name kube-apiserver -q | head -n 1)"; if [[ -n "$id" ]]; then crictl --runtime-endpoint unix:///run/containerd/containerd.sock logs --tail=120 "$id"; else echo "no kube-apiserver container found"; fi' || true
 
   log "kubelet status"
