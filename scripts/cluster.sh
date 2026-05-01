@@ -38,8 +38,8 @@ cloud_init_file() {
   local path="$1"
   cat >"$path" <<EOF
 #cloud-config
-package_update: false
-package_upgrade: false
+package_update: true
+package_upgrade: true
 write_files:
   - path: /usr/local/sbin/bootstrap-k8s-node.sh
     permissions: "0o755"
@@ -136,13 +136,51 @@ launch_node() {
     --cpus "$CPUS" \
     --memory "$MEMORY" \
     --disk "$DISK" \
+    --timeout "$MULTIPASS_LAUNCH_TIMEOUT" \
     --cloud-init "$cloud_init"
 }
 
 wait_cloud_init() {
   local node="$1"
   log "Waiting for cloud-init on $node"
+  wait_node_exec "$node"
   mp_exec "$node" cloud-init status --wait
+}
+
+wait_node_exec() {
+  local node="$1"
+  local attempt
+  for ((attempt = 1; attempt <= 60; attempt++)); do
+    if mp_exec "$node" true >/dev/null 2>&1; then
+      return
+    fi
+    sleep 5
+  done
+
+  log "Restarting $node because multipass exec did not become available"
+  multipass restart "$node"
+  for ((attempt = 1; attempt <= 60; attempt++)); do
+    if mp_exec "$node" true >/dev/null 2>&1; then
+      return
+    fi
+    sleep 5
+  done
+
+  die "timed out waiting for $node to accept multipass exec"
+}
+
+restart_nodes_if_required() {
+  local node
+  for node in $(all_nodes); do
+    if mp_exec "$node" test -f /var/run/reboot-required; then
+      log "Restarting $node after package upgrades"
+      multipass restart "$node"
+      wait_node_exec "$node"
+      wait_cloud_init "$node"
+    else
+      log "No restart required for $node"
+    fi
+  done
 }
 
 bootstrap_control_plane() {
@@ -256,6 +294,7 @@ create_cluster() {
     wait_cloud_init "$node"
   done
 
+  restart_nodes_if_required
   bootstrap_control_plane
   join_control_planes
   join_workers

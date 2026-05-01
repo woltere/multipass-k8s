@@ -14,6 +14,7 @@ export WORKERS
 export CPUS
 export MEMORY
 export DISK
+export MULTIPASS_LAUNCH_TIMEOUT
 export IMAGE
 export POD_CIDR
 export SERVICE_CIDR

@@ -32,6 +32,12 @@ The default cluster is one control plane and two workers. Override settings from
 make create KUBERNETES_MINOR=1.35 KUBERNETES_VERSION=latest CONTROL_PLANES=1 WORKERS=3
 ```
 
+Node launch waits up to 30 minutes by default so cloud-init can apply Ubuntu package upgrades. If an upgrade requires a reboot, the host script restarts the node after cloud-init completes and before Kubernetes bootstrap. Override the launch timeout for slow networks:
+
+```sh
+make create MULTIPASS_LAUNCH_TIMEOUT=3600
+```
+
 For an exact Kubernetes patch release:
 
 ```sh
