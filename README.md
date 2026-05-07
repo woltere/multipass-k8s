@@ -65,6 +65,8 @@ make falco-report # show Falco pods and recent logs
 make trivy-reports # list Trivy Operator report resources
 make kube-bench-report # show kube-bench job status and logs
 make cks-reports-save # save CKS reports under reports/<timestamp>/
+make harden       # enable API server encryption-at-rest config
+make harden-encryption-migrate # rewrite existing Secrets with active encryption
 ```
 
 ## Configuration
@@ -73,6 +75,8 @@ Main cluster defaults live in `config/cluster.env`.
 
 Add-on defaults live in `config/addons.env`.
 
+Hardening defaults live in `config/hardening.env`.
+
 Trivy Operator Helm values live in `config/trivy-operator-values.yaml`, including control-plane tolerations for scan jobs and the node collector.
 
 Every setting can be overridden through the environment or `make` variables, for example:
@@ -80,6 +84,17 @@ Every setting can be overridden through the environment or `make` variables, for
 ```sh
 make create CLUSTER_NAME=cks-lab CPUS=4 MEMORY=6G DISK=30G WORKERS=2
 make cilium CILIUM_VERSION=1.19.3
+make harden ENCRYPTION_PROVIDER=secretbox
+```
+
+## Hardening
+
+`make harden` installs an API server encryption provider config on every control-plane node and patches the kube-apiserver static pod manifest to use it. The generated config is stored under `.state/encryption-provider-config.yaml` with `0600` permissions and is reused on later runs.
+
+By default, the config encrypts Secrets with the `secretbox` provider and keeps `identity` as a fallback provider. Existing Secrets are not rewritten automatically; run this separately when you want to migrate stored Secret data:
+
+```sh
+make harden-encryption-migrate
 ```
 
 ## CKS Add-ons

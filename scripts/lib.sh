@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG="${CONFIG:-${ROOT_DIR}/config/cluster.env}"
 ADDONS_CONFIG="${ADDONS_CONFIG:-${ROOT_DIR}/config/addons.env}"
+HARDENING_CONFIG="${HARDENING_CONFIG:-${ROOT_DIR}/config/hardening.env}"
 
 load_cluster_config() {
   if [[ -f "$CONFIG" ]]; then
@@ -61,6 +62,18 @@ load_addons_config() {
   KUBE_BENCH_IMAGE="${KUBE_BENCH_IMAGE:-aquasec/kube-bench:latest}"
   REPORTS_DIR="${REPORTS_DIR:-reports}"
   FALCO_LOG_LINES="${FALCO_LOG_LINES:-200}"
+}
+
+load_hardening_config() {
+  if [[ -f "$HARDENING_CONFIG" ]]; then
+    # shellcheck source=/dev/null
+    source "$HARDENING_CONFIG"
+  fi
+
+  ENCRYPTION_PROVIDER="${ENCRYPTION_PROVIDER:-secretbox}"
+  ENCRYPTION_RESOURCES="${ENCRYPTION_RESOURCES:-secrets}"
+  ENCRYPTION_CONFIG_PATH="${ENCRYPTION_CONFIG_PATH:-/etc/kubernetes/encryption-provider-config.yaml}"
+  ENCRYPTION_KEY_NAME="${ENCRYPTION_KEY_NAME:-key1}"
 }
 
 log() {

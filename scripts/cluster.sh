@@ -28,6 +28,8 @@ Usage:
   make trivy-reports
   make kube-bench-report
   make cks-reports-save
+  make harden
+  make harden-encryption-migrate
 
 Direct script usage:
   ./scripts/cluster.sh <create|start|stop|destroy|status|diagnose|kubeconfig|check-tools>

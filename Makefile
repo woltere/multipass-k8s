@@ -2,9 +2,11 @@ SHELL := /bin/bash
 
 CONFIG ?= config/cluster.env
 ADDONS_CONFIG ?= config/addons.env
+HARDENING_CONFIG ?= config/hardening.env
 
 export CONFIG
 export ADDONS_CONFIG
+export HARDENING_CONFIG
 export CLUSTER_NAME
 export KUBERNETES_MINOR
 export KUBERNETES_VERSION
@@ -38,8 +40,12 @@ export KUBE_BENCH_NAMESPACE
 export KUBE_BENCH_IMAGE
 export REPORTS_DIR
 export FALCO_LOG_LINES
+export ENCRYPTION_PROVIDER
+export ENCRYPTION_RESOURCES
+export ENCRYPTION_CONFIG_PATH
+export ENCRYPTION_KEY_NAME
 
-.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean cks-reports falco-report trivy-reports kube-bench-report cks-reports-save check-tools verify
+.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean cks-reports falco-report trivy-reports kube-bench-report cks-reports-save harden harden-encryption-migrate check-tools verify
 
 help:
 	@./scripts/cluster.sh help
@@ -91,6 +97,12 @@ kube-bench-report:
 
 cks-reports-save:
 	@./scripts/reports.sh save
+
+harden:
+	@./scripts/hardening.sh harden
+
+harden-encryption-migrate:
+	@./scripts/hardening.sh encryption-migrate
 
 check-tools:
 	@./scripts/cluster.sh check-tools
