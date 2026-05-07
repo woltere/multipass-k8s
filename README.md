@@ -66,6 +66,7 @@ make trivy-reports # list Trivy Operator report resources
 make kube-bench-report # show kube-bench job status and logs
 make cks-reports-save # save CKS reports under reports/<timestamp>/
 make harden       # enable API server encryption-at-rest config
+make harden-audit # enable API server audit logging
 make harden-encryption-migrate # rewrite existing Secrets with active encryption
 ```
 
@@ -96,6 +97,8 @@ By default, the config encrypts Secrets with the `secretbox` provider and keeps 
 ```sh
 make harden-encryption-migrate
 ```
+
+`make harden-audit` installs `config/audit-policy.yaml` on every control-plane node and patches the kube-apiserver static pod manifest to write JSON audit logs to `/var/log/kubernetes/audit/audit.log`. The default balanced policy logs Secret and ConfigMap write request bodies for CKS practice, so audit logs can contain sensitive values.
 
 ## CKS Add-ons
 

@@ -44,8 +44,14 @@ export ENCRYPTION_PROVIDER
 export ENCRYPTION_RESOURCES
 export ENCRYPTION_CONFIG_PATH
 export ENCRYPTION_KEY_NAME
+export AUDIT_POLICY_SOURCE
+export AUDIT_POLICY_PATH
+export AUDIT_LOG_PATH
+export AUDIT_LOG_MAXAGE
+export AUDIT_LOG_MAXBACKUP
+export AUDIT_LOG_MAXSIZE
 
-.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean cks-reports falco-report trivy-reports kube-bench-report cks-reports-save harden harden-encryption-migrate check-tools verify
+.PHONY: help create start stop destroy status diagnose kubeconfig cilium apparmor cks-tools cks-clean cks-reports falco-report trivy-reports kube-bench-report cks-reports-save harden harden-audit harden-encryption-migrate check-tools verify
 
 help:
 	@./scripts/cluster.sh help
@@ -100,6 +106,9 @@ cks-reports-save:
 
 harden:
 	@./scripts/hardening.sh harden
+
+harden-audit:
+	@./scripts/hardening.sh audit
 
 harden-encryption-migrate:
 	@./scripts/hardening.sh encryption-migrate

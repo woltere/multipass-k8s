@@ -74,6 +74,12 @@ load_hardening_config() {
   ENCRYPTION_RESOURCES="${ENCRYPTION_RESOURCES:-secrets}"
   ENCRYPTION_CONFIG_PATH="${ENCRYPTION_CONFIG_PATH:-/etc/kubernetes/encryption-provider-config.yaml}"
   ENCRYPTION_KEY_NAME="${ENCRYPTION_KEY_NAME:-key1}"
+  AUDIT_POLICY_SOURCE="${AUDIT_POLICY_SOURCE:-config/audit-policy.yaml}"
+  AUDIT_POLICY_PATH="${AUDIT_POLICY_PATH:-/etc/kubernetes/audit-policy.yaml}"
+  AUDIT_LOG_PATH="${AUDIT_LOG_PATH:-/var/log/kubernetes/audit/audit.log}"
+  AUDIT_LOG_MAXAGE="${AUDIT_LOG_MAXAGE:-30}"
+  AUDIT_LOG_MAXBACKUP="${AUDIT_LOG_MAXBACKUP:-10}"
+  AUDIT_LOG_MAXSIZE="${AUDIT_LOG_MAXSIZE:-100}"
 }
 
 log() {

@@ -1,0 +1,41 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+omitStages:
+  - RequestReceived
+omitManagedFields: true
+rules:
+  - level: None
+    nonResourceURLs:
+      - /healthz*
+      - /livez*
+      - /readyz*
+      - /version
+      - /metrics
+
+  - level: None
+    resources:
+      - group: ""
+        resources:
+          - events
+
+  - level: RequestResponse
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+    resources:
+      - group: ""
+        resources:
+          - secrets
+          - configmaps
+
+  - level: Metadata
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+
+  - level: Metadata
